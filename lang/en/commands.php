@@ -527,6 +527,27 @@ return [
             'devices-as-array' => 'Return the output as a JSON array instead of a JSON entry per device per line',
         ],
     ],
+    'report:sensor-baseline' => [
+        'description' => 'Compare sensors with the same sensor on devices of the same hardware to find sensors that are not real, limits inside the normal range and devices that read differently (report only, nothing is changed)',
+        'invalid_show' => 'Invalid value for --show: :show',
+        'outlier_heading' => 'Sensors that read differently from their peers:',
+        'detail' => [
+            'phantom' => 'reads 0 on all :devices devices',
+            'limits' => ':tight limits inside the normal range (:over alerting now), range with margin :low to :high',
+            'outliers' => ':count away from peers',
+        ],
+        'options' => [
+            'min-devices' => 'Number of devices of the same hardware needed before a group is judged',
+            'threshold' => 'How many deviations from the peer median a reading must be to count as different',
+            'class' => 'Only this sensor class (temperature, dbm, fanspeed...). Can be specified multiple times',
+            'os' => 'Only devices with this os',
+            'hardware' => 'Only devices with this hardware, SQL wildcards (%) are allowed',
+            'show' => 'Which groups to print :types',
+            'output' => 'Output format to display the data :types',
+            'merge-numbers' => 'Treat numbered sensors (Fan 1, Fan 2) as the same sensor',
+            'include-down' => 'Include devices that are currently down (their last reading may be stale)',
+        ],
+    ],
     'scan:network' => [
         'description' => 'Scan network for snmp hosts and add them to LibreNMS',
         'arguments' => [
