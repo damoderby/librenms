@@ -111,6 +111,8 @@ class SensorBaseline
         $result = $group + [
             'devices' => $devices,
             'sensors' => count($rows),
+            'judged' => $enough,
+            'sensor_ids' => array_column($rows, 'sensor_id'),
             'min' => min($values),
             'median' => $median,
             'max' => max($values),
@@ -120,6 +122,7 @@ class SensorBaseline
             'suggest_low' => null,
             'suggest_high' => null,
             'outliers' => [],
+            'tight' => [],
         ];
 
         // every peer reads zero: the sensor is reported by the device but is not real
@@ -165,8 +168,11 @@ class SensorBaseline
                 if (($row['sensor_custom'] ?? 'No') === 'Yes') {
                     continue; // set by hand, leave it to the operator
                 }
-                if (($limit !== null && (float) $limit < $high) || ($limitLow !== null && (float) $limitLow > $low)) {
+                $tightHigh = $limit !== null && (float) $limit < $high;
+                $tightLow = $limitLow !== null && (float) $limitLow > $low;
+                if ($tightHigh || $tightLow) {
                     $result['tight_limits']++;
+                    $result['tight'][$row['sensor_id']] = ['high' => $tightHigh, 'low' => $tightLow];
                 }
                 if (($limit !== null && $values[$index] > (float) $limit) || ($limitLow !== null && $values[$index] < (float) $limitLow)) {
                     $result['over_limit']++;
